@@ -104,10 +104,12 @@ void handle_touch()
   {
     if (touch_touched())
     {
+      // Send press event when finger first touches screen
       vnc.mouseEvent(touch_last_x, touch_last_y, 0b001);
     }
     else if (touch_released())
     {
+      // Send release event when finger is lifted
       vnc.mouseEvent(touch_last_x, touch_last_y, 0b000);
     }
   }

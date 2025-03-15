@@ -7,6 +7,7 @@
 #define TOUCH_RST 38
 
 int16_t touch_last_x = 0, touch_last_y = 0;
+bool touch_is_pressed = false; // Track if touch is currently pressed
 
 TAMC_GT911 ts = TAMC_GT911(I2C_SDA_PIN, I2C_SCL_PIN, TOUCH_INT, TOUCH_RST, 1024, 600);
 
@@ -27,16 +28,15 @@ void touch_init(int max_x, int max_y)
 
 bool touch_has_signal()
 {
-
   return true;
 }
 
 bool touch_touched()
 {
-
   ts.read();
-  if (ts.isTouched)
+  if (ts.isTouched && !touch_is_pressed) // Only register touch if not already pressed
   {
+    touch_is_pressed = true;
 
 #ifdef SCREEN_HD
     touch_last_x = map(ts.points[0].x, 0, 1024, 0, SCREEN_W);
@@ -56,6 +56,11 @@ bool touch_touched()
 
 bool touch_released()
 {
-
-  return true;
+  ts.read();
+  if (!ts.isTouched && touch_is_pressed) // Only register release if was previously pressed
+  {
+    touch_is_pressed = false;
+    return true;
+  }
+  return false;
 }
