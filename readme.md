@@ -155,6 +155,3 @@ This project uses the following libraries:
 - Touch controller libraries (e.g., TAMC_GT911)
 
 ---
-
-## 📜 **License**
-
