@@ -22,11 +22,14 @@
 #define RGB565_WHITE 0xFFFF
 
 
-const char *SSID_NAME = "Sharad-4G";
-const char *SSID_PASSWORD = "VFGoudar";
-const char *VNC_IP = "192.168.29.82";
-const uint16_t VNC_PORT = 5905;
-const char *VNC_PASSWORD = "123456789";
+// WiFi credentials
+#define SSID_NAME "your_wifi_ssid"
+#define SSID_PASSWORD "your_wifi_password"
+
+// VNC server details
+#define VNC_IP "192.168.1.100"
+#define VNC_PORT 5900
+#define VNC_PASSWORD "your_vnc_password"
 
 #define TFT_BL 10
 
@@ -100,18 +103,17 @@ void TFTnoVNC(void)
 
 void handle_touch()
 {
-  if (touch_has_signal())
-  {
-    if (touch_touched())
-    {
-      // Send press event when finger first touches screen
-      vnc.mouseEvent(touch_last_x, touch_last_y, 0b001);
-    }
-    else if (touch_released())
-    {
-      // Send release event when finger is lifted
-      vnc.mouseEvent(touch_last_x, touch_last_y, 0b000);
-    }
+  // Update the touch state machine
+  touch_update();
+  
+  if (touch_touched()) {
+    // A new touch has been detected - send press and release events
+    vnc.mouseEvent(touch_last_x, touch_last_y, 0b001);
+    delay(10); // Short delay
+    vnc.mouseEvent(touch_last_x, touch_last_y, 0b000);
+    
+    // Mark as processed so it won't be processed again
+    touch_mark_processed();
   }
 }
 
