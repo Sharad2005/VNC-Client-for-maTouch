@@ -158,6 +158,3 @@ This project uses the following libraries:
 
 ## 📜 **License**
 
-[Your License Information]
-
----
